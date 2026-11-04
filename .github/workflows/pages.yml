@@ -1,0 +1,38 @@
+name: Publicar Armador de Cintas
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar sitio
+        run: |
+          mkdir -p site
+          cp docs/index.html site/index.html
+          touch site/.nojekyll
+      - name: Subir sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Publicar sitio
+        id: deployment
+        uses: actions/deploy-pages@v4
