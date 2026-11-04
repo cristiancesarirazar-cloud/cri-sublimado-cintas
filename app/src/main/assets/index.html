@@ -41,7 +41,30 @@ function renderRows(){rowsEl.innerHTML='';if(!rows.length){rowsEl.innerHTML='<di
  d.querySelector('.pick').onchange=e=>{r.fileIndex=+e.target.value;draw()};d.querySelector('.copies').onchange=e=>{r.copies=Math.max(1,Math.min(6,+e.target.value||1));e.target.value=r.copies;draw()};d.querySelector('.imgOrientation').onchange=e=>{r.imageOrientation=e.target.value;draw()};d.querySelector('.remove').onclick=()=>{rows.splice(i,1);renderRows();draw()};rowsEl.appendChild(d);
  });}
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-filesEl.onchange=async e=>{for(const f of e.target.files){if(!f.type.startsWith('image/'))continue;const url=URL.createObjectURL(f);const im=new Image();im.src=url;await im.decode();images.push({name:f.name,img:im});}if(images.length&&!rows.length)addRow(makeRow(0,1,'derecha'));renderRows();draw();};
+filesEl.onchange=async e=>{
+ const selected=Array.from(e.target.files||[]);
+ let added=0,failed=0;
+ for(const f of selected){
+  const looksLikeImage=(f.type||'').toLowerCase().startsWith('image/')||/\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(f.name||'');
+  if(!looksLikeImage){failed++;continue;}
+  try{
+   const url=URL.createObjectURL(f);
+   const im=new Image();
+   await new Promise((resolve,reject)=>{
+    im.onload=resolve;
+    im.onerror=()=>reject(new Error('No se pudo leer la imagen'));
+    im.src=url;
+   });
+   images.push({name:f.name||('Imagen '+(images.length+1)),img:im});
+   added++;
+  }catch(err){failed++;}
+ }
+ if(images.length&&!rows.length)addRow(makeRow(0,1,'derecha'));
+ renderRows();draw();
+ if(added===0)alert('No se pudo leer esa imagen. Probá con una foto JPG o PNG de la galería.');
+ else if(failed>0)alert('Se cargaron '+added+' imagen(es). No se pudieron leer '+failed+' archivo(s).');
+ e.target.value='';
+};
 document.getElementById('addRow').onclick=()=>addRow(makeRow(Math.max(0,images.length-1),1,'derecha'));
 document.getElementById('fillRows').onclick=()=>{if(!images.length){alert('Primero cargá al menos una imagen.');return;}while(rows.length<6)rows.push(makeRow(rows.length%images.length,1,'derecha'));renderRows();draw();};
 document.getElementById('refresh').onclick=draw;
