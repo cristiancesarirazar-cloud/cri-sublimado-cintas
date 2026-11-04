@@ -5,30 +5,30 @@
 <title>Cri Sublimado – Armador de cintas</title>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#ef7d00"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="apple-touch-icon" href="icon-192.png">
 <style>
-:root{font-family:Arial,sans-serif;color:#202124;background:#f4f5f7}*{box-sizing:border-box}body{margin:0;padding:16px}.wrap{max-width:1100px;margin:auto}.card{background:white;border-radius:14px;padding:16px;margin:0 0 14px;box-shadow:0 2px 10px #0000000c}h1{font-size:24px;margin:0 0 6px}h2{font-size:18px;margin:0 0 12px}.sub{color:#5f6368;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}input,select,button{font:inherit}input[type=file],input[type=number],select{width:100%;padding:9px;border:1px solid #c9cdd2;border-radius:8px;background:white}input[type=checkbox]{transform:scale(1.15);margin-right:7px}.row{display:grid;grid-template-columns:minmax(140px,1fr) 100px 125px 90px 42px;gap:8px;align-items:end;padding:10px 0;border-bottom:1px solid #eceff1}.row:last-child{border:0}.row label{font-size:12px}.btns{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:9px;padding:11px 15px;background:#ef7d00;color:#fff;font-weight:700;cursor:pointer}button.secondary{background:#30343b}button.light{background:#e9edf2;color:#202124}.small{font-size:12px;color:#60656c}.previewbox{overflow:auto;background:#e9edf2;padding:12px;border-radius:10px}.preview{width:min(100%,900px);aspect-ratio:52/21;background:white;box-shadow:0 1px 8px #0002;position:relative;margin:auto}.preview canvas{width:100%;height:100%;display:block}.stat{font-weight:700;color:#b65b00}.notice{background:#fff6e9;border-left:4px solid #ef7d00;padding:10px;border-radius:6px;font-size:13px}.empty{padding:20px;text-align:center;color:#777}
+:root{font-family:Arial,sans-serif;color:#202124;background:#f4f5f7}*{box-sizing:border-box}body{margin:0;padding:16px}.wrap{max-width:1100px;margin:auto}.card{background:white;border-radius:14px;padding:16px;margin:0 0 14px;box-shadow:0 2px 10px #0000000c}h1{font-size:24px;margin:0 0 6px}h2{font-size:18px;margin:0 0 12px}.sub{color:#5f6368;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}input,select,button{font:inherit}input[type=file],input[type=number],select{width:100%;padding:9px;border:1px solid #c9cdd2;border-radius:8px;background:white}input[type=checkbox]{transform:scale(1.15);margin-right:7px}.row{display:grid;grid-template-columns:minmax(140px,1fr) 100px 125px 90px 42px;gap:8px;align-items:end;padding:10px 0;border-bottom:1px solid #eceff1}.row:last-child{border:0}.row label{font-size:12px}.btns{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:9px;padding:11px 15px;background:#ef7d00;color:#fff;font-weight:700;cursor:pointer}button.secondary{background:#30343b}button.light{background:#e9edf2;color:#202124}.small{font-size:12px;color:#60656c}.previewbox{overflow:auto;background:#e9edf2;padding:12px;border-radius:10px}.preview{width:min(100%,900px);aspect-ratio:21/53;background:white;box-shadow:0 1px 8px #0002;position:relative;margin:auto}.preview canvas{width:100%;height:100%;display:block}.stat{font-weight:700;color:#b65b00}.notice{background:#fff6e9;border-left:4px solid #ef7d00;padding:10px;border-radius:6px;font-size:13px}.empty{padding:20px;text-align:center;color:#777}
 @media(max-width:650px){body{padding:9px}.row{grid-template-columns:1fr 1fr}.row .filepick{grid-column:1/-1}.row .remove{grid-column:2}.row label{margin-top:4px}}
-@media print{@page{size:52cm 21cm;margin:0}html,body{width:52cm;height:21cm;margin:0;padding:0;background:white}.wrap,.card{max-width:none;margin:0;padding:0;border:0;border-radius:0;box-shadow:none}.no-print{display:none!important}#printArea{display:block!important;width:52cm;height:21cm}#printCanvas{width:52cm;height:21cm;display:block}}
+@media print{@page{size:21cm 53cm;margin:0}html,body{width:21cm;height:53cm;margin:0;padding:0;background:white}.wrap,.card{max-width:none;margin:0;padding:0;border:0;border-radius:0;box-shadow:none}.no-print{display:none!important}#printArea{display:block!important;width:52cm;height:21cm}#printCanvas{width:52cm;height:21cm;display:block}}
 </style></head>
 <body><div class="wrap">
 <section class="card no-print"><h1>Armador de cintas · Cri Sublimado</h1><p class="sub">Prepará una hoja completa, repetí diseños y exportá para sublimación.</p>
 <div class="grid">
 <div><label for="files">1. Cargar imágenes</label><input id="files" type="file" accept="image/*" multiple><div class="small">Podés cargar una o varias imágenes desde el celular o la computadora.</div></div>
-<div><label for="sheetType">Tipo de hoja</label><select id="sheetType"><option value="cintas">Cintas Cri Sublimado (52 × 21 cm)</option><option value="custom">Personalizado</option></select></div>
-<div><label for="orientation">Orientación</label><select id="orientation"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option></select></div>
+<div><label for="sheetType">Tipo de hoja</label><select id="sheetType"><option value="cintas">Cintas Cri Sublimado (21 × 53 cm)</option><option value="custom">Personalizado</option></select></div>
+<div><label for="orientation">Orientación</label><select id="orientation"><option value="vertical" selected>Vertical</option><option value="horizontal">Horizontal</option></select></div>
 <div id="customDims" style="display:none"><label>Medida personalizada (cm)</label><div style="display:flex;gap:6px"><input id="customW" type="number" min="5" max="200" step="0.1" value="52" aria-label="Ancho en centímetros"><input id="customH" type="number" min="5" max="200" step="0.1" value="21" aria-label="Alto en centímetros"></div></div>
 <div><label>Medida de cada cinta</label><input value="52 cm × 2,5 cm" disabled></div>
 <div><label>Separación de corte</label><input value="1 cm" disabled></div>
 <div><label for="fitMode">Ajuste de imagen</label><select id="fitMode"><option value="cover" selected>Ocupar toda la cinta (sin deformar)</option><option value="contain">Mostrar imagen completa (puede dejar blanco)</option></select></div>
 </div></section>
-<section class="card no-print"><h2>2. Armado de la hoja</h2><div class="notice">Entran hasta <b>6 cintas</b>: 6 × 2,5 cm + 5 × 1 cm = 20 cm. Queda 1 cm libre, distribuido como 0,5 cm arriba y abajo. Las imágenes ya deben incluir sus márgenes de gancho si los necesitan.</div>
+<section class="card no-print"><h2>2. Armado de la hoja</h2><div class="notice">Hoja de <b>21 × 53 cm</b>. Seis cintas de <b>2,5 × 52 cm</b>, con 1 cm entre ellas. En cada cinta quedan <b>7 cm libres al principio y 7 cm al final</b> para colocar el gancho: solo se imprime el tramo central de 38 cm.</div>
 <div id="rows"><div class="empty">Cargá imágenes para comenzar.</div></div>
 <div class="btns"><button class="light" id="addRow">＋ Agregar cinta</button><button class="secondary" id="fillRows">Completar hasta 6</button><button id="refresh">Actualizar vista previa</button></div>
-<p class="small">Cada cinta tiene un contorno punteado de 52 × 2,5 cm para verificar el tamaño. En cada diseño podés elegir su orientación: derecha (normal) o izquierda (girada 180°). Las líneas punteadas también salen en el archivo para orientar el corte. Elegí si querés llenar toda la cinta o mostrar la imagen completa.</p></section>
-<section class="card"><h2>3. Vista previa de impresión</h2><div class="grid no-print"><div><div class="stat" id="count">0 de 6 cintas ocupadas</div><div class="small" id="sizeLabel">Tamaño final: 52 × 21 cm · 300 DPI</div></div><div class="btns" style="margin:0"><button id="png">Descargar PNG 300 DPI</button><button id="pdf">Imprimir / Guardar PDF</button></div></div><div class="previewbox"><div class="preview"><canvas id="preview"></canvas></div></div><p class="small no-print">Para el PDF, elegí “Guardar como PDF” y desactivá “Ajustar a página” si aparece. Imprimí al 100% / tamaño real.</p></section>
+<p class="small">Cada cinta mide 2,5 × 52 cm. Los 7 cm de cada extremo quedan totalmente blancos para el gancho. Podés espejar el diseño antes de imprimir. Elegí si querés llenar toda la cinta o mostrar la imagen completa.</p></section>
+<section class="card"><h2>3. Vista previa de impresión</h2><div class="grid no-print"><div><div class="stat" id="count">0 de 6 cintas ocupadas</div><div class="small" id="sizeLabel">Tamaño final: 21 × 53 cm · 300 DPI</div></div><div class="btns" style="margin:0"><button id="png">Descargar PNG 300 DPI</button><button id="pdf">Imprimir / Guardar PDF</button></div></div><div class="previewbox"><div class="preview"><canvas id="preview"></canvas></div></div><p class="small no-print">Para el PDF, elegí “Guardar como PDF” y desactivá “Ajustar a página” si aparece. Imprimí al 100% / tamaño real.</p></section>
 </div>
 <script>
-const CM=300/2.54, STRIP_H=2.5*CM, GAP=1*CM, MARGIN=.5*CM;
-let pageWcm=52,pageHcm=21, vertical=false, W=Math.round(pageWcm*CM), H=Math.round(pageHcm*CM);
+const CM=300/2.54, STRIP_H=2.5*CM, GAP=1*CM, MARGIN=.5*CM, END=7*CM;
+let pageWcm=21,pageHcm=53, vertical=true, W=Math.round(pageWcm*CM), H=Math.round(pageHcm*CM);
 const filesEl=document.getElementById('files'), rowsEl=document.getElementById('rows'), preview=document.getElementById('preview');
 preview.width=W;preview.height=H;
 let images=[], rows=[];
@@ -50,46 +50,32 @@ document.getElementById('fitMode').onchange=draw;
 function updateSheet(){
  const custom=document.getElementById('sheetType').value==='custom';
  document.getElementById('customDims').style.display=custom?'block':'none';
- const orient=document.getElementById('orientation').value;
- vertical=orient==='vertical';
- let a=custom?Math.max(5,+document.getElementById('customW').value||52):52;
- let b=custom?Math.max(5,+document.getElementById('customH').value||21):21;
- if(vertical){pageWcm=b;pageHcm=a;}else{pageWcm=a;pageHcm=b;}
- W=Math.round(pageWcm*CM);H=Math.round(pageHcm*CM);
- preview.width=W;preview.height=H;
+ const orient=document.getElementById('orientation').value; vertical=orient==='vertical';
+ let a=custom?Math.max(5,+document.getElementById('customW').value||21):21;
+ let b=custom?Math.max(5,+document.getElementById('customH').value||53):53;
+ if(!custom){pageWcm=21;pageHcm=53;vertical=true;} else {pageWcm=vertical?Math.min(a,b):Math.max(a,b);pageHcm=vertical?Math.max(a,b):Math.min(a,b);}
+ W=Math.round(pageWcm*CM);H=Math.round(pageHcm*CM);preview.width=W;preview.height=H;
  document.querySelector('.preview').style.aspectRatio=pageWcm+'/'+pageHcm;
- document.getElementById('sizeLabel').textContent=`Tamaño final: ${pageWcm} × ${pageHcm} cm · 300 DPI`;
- draw();
+ document.getElementById('sizeLabel').textContent='Tamaño final: '+pageWcm+' × '+pageHcm+' cm · 300 DPI'; draw();
 }
 function drawTo(ctx){
- ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);let slot=0;
- const stripAcross=vertical, stripLong=vertical?H:W, stripWide=vertical?W:H;
- const available=(stripAcross?W:H); const stripSize=STRIP_H, pitch=STRIP_H+GAP;
- rows.forEach(r=>{const im=images[r.fileIndex]?.img;if(!im)return;for(let n=0;n<r.copies&&slot<6;n++,slot++){
-  const offset=MARGIN+slot*pitch; const mode=document.getElementById('fitMode').value;
-  const iw=stripLong, ih=stripSize;
-  const scale=mode==='cover'?Math.max(iw/im.width,ih/im.height):Math.min(iw/im.width,ih/im.height);
+ ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+ const stripX=.5*CM, top=(H-52*CM)/2, contentTop=top+END, contentH=38*CM, pitch=STRIP_H+GAP;
+ let occupied=0;
+ rows.slice(0,6).forEach((r,i)=>{
+  const im=images[r.fileIndex]?.img;if(!im)return; const x=stripX+i*pitch;
+  if(x+STRIP_H>W)return;
+  const mode=document.getElementById('fitMode').value, scale=mode==='cover'?Math.max(STRIP_H/im.width,contentH/im.height):Math.min(STRIP_H/im.width,contentH/im.height);
   const dw=im.width*scale,dh=im.height*scale;
-  const xx=(iw-dw)/2, yy=(ih-dh)/2;
-  ctx.save();
-  const left=r.imageOrientation==='izquierda';
-  if(!vertical){
-   ctx.beginPath();ctx.rect(0,offset,W,STRIP_H);ctx.clip();
-   ctx.translate(W/2,offset+STRIP_H/2);if(left)ctx.rotate(Math.PI);
-   ctx.drawImage(im,xx-iw/2,yy-ih/2,dw,dh);
-  } else {
-   ctx.beginPath();ctx.rect(offset,0,STRIP_H,H);ctx.clip();
-   ctx.translate(offset+STRIP_H/2,H/2);ctx.rotate(Math.PI/2+(left?Math.PI:0));
-   ctx.drawImage(im,xx-iw/2,yy-ih/2,dw,dh);
-  }
-  ctx.restore();
- }});
+  ctx.save();ctx.beginPath();ctx.rect(x,contentTop,STRIP_H,contentH);ctx.clip();ctx.translate(x+STRIP_H/2,contentTop+contentH/2);
+  if(r.imageOrientation==='izquierda')ctx.scale(-1,1);ctx.drawImage(im,-dw/2,-dh/2,dw,dh);ctx.restore();occupied++;
+ });
  ctx.save();ctx.strokeStyle='#777';ctx.lineWidth=Math.max(2,CM*.012);ctx.setLineDash([CM*.08,CM*.07]);
- for(let i=0;i<6;i++){const offset=MARGIN+i*pitch;if(!vertical)ctx.strokeRect(1,offset+1,W-2,STRIP_H-2);else ctx.strokeRect(offset+1,1,STRIP_H-2,H-2);}
- ctx.restore();document.getElementById('count').textContent=slot+' de 6 cintas ocupadas';
+ for(let i=0;i<6;i++){const x=stripX+i*pitch;if(x+STRIP_H<=W)ctx.strokeRect(x+1,top+1,STRIP_H-2,52*CM-2);}ctx.restore();
+ document.getElementById('count').textContent=occupied+' de 6 cintas ocupadas';
 }
 function draw(){const c=preview.getContext('2d');drawTo(c);}
-document.getElementById('png').onclick=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;drawTo(c.getContext('2d'));c.toBlob(blob=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Cri_Sublimado_Cintas_52x21cm_300dpi.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);},'image/png');};
+document.getElementById('png').onclick=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;drawTo(c.getContext('2d'));c.toBlob(blob=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Cri_Sublimado_Cintas_21x53cm_300dpi.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);},'image/png');};
 document.getElementById('pdf').onclick=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;drawTo(c.getContext('2d'));const data=c.toDataURL('image/png');if(window.AndroidPrint&&window.AndroidPrint.printPng){window.AndroidPrint.printPng(data.split(',')[1],pageWcm,pageHcm);return;}const win=window.open('','_blank');if(!win){alert('El navegador bloqueó la ventana. Permití ventanas emergentes para guardar el PDF.');return;}win.document.write(`<!doctype html><html><head><title>Cri Sublimado - Cintas</title><style>@page{size:${pageWcm}cm ${pageHcm}cm;margin:0}html,body{margin:0;width:${pageWcm}cm;height:${pageHcm}cm}img{display:block;width:${pageWcm}cm;height:${pageHcm}cm}</style></head><body><img src="${data}"><script>window.onload=()=>setTimeout(()=>window.print(),300);<\/script></body></html>`);win.document.close();};
 updateSheet();
 </script>
