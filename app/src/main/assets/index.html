@@ -45,16 +45,12 @@ filesEl.onchange=async e=>{
  const selected=Array.from(e.target.files||[]);
  let added=0,failed=0;
  for(const f of selected){
-  const looksLikeImage=(f.type||'').toLowerCase().startsWith('image/')||/\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(f.name||'');
+  const looksLikeImage=(f.type||'').toLowerCase().startsWith('image/')||/\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(f.name||'');
   if(!looksLikeImage){failed++;continue;}
   try{
-   const url=URL.createObjectURL(f);
+   const dataUrl=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('No se pudo leer el archivo'));reader.readAsDataURL(f);});
    const im=new Image();
-   await new Promise((resolve,reject)=>{
-    im.onload=resolve;
-    im.onerror=()=>reject(new Error('No se pudo leer la imagen'));
-    im.src=url;
-   });
+   await new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=()=>reject(new Error('No se pudo decodificar la imagen'));im.src=dataUrl;});
    images.push({name:f.name||('Imagen '+(images.length+1)),img:im});
    added++;
   }catch(err){failed++;}
@@ -76,25 +72,26 @@ function updateSheet(){
  const orient=document.getElementById('orientation').value; vertical=orient==='vertical';
  let a=custom?Math.max(5,+document.getElementById('customW').value||21):21;
  let b=custom?Math.max(5,+document.getElementById('customH').value||53):53;
- if(!custom){pageWcm=21;pageHcm=53;vertical=true;} else {pageWcm=vertical?Math.min(a,b):Math.max(a,b);pageHcm=vertical?Math.max(a,b):Math.min(a,b);}
+ if(!custom){pageWcm=vertical?21:53;pageHcm=vertical?53:21;} else {pageWcm=vertical?Math.min(a,b):Math.max(a,b);pageHcm=vertical?Math.max(a,b):Math.min(a,b);}
  W=Math.round(pageWcm*CM);H=Math.round(pageHcm*CM);preview.width=W;preview.height=H;
  document.querySelector('.preview').style.aspectRatio=pageWcm+'/'+pageHcm;
  document.getElementById('sizeLabel').textContent='Tamaño final: '+pageWcm+' × '+pageHcm+' cm · 300 DPI'; draw();
 }
 function drawTo(ctx){
  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
- const stripX=.5*CM, top=(H-52*CM)/2, contentTop=top+END, contentH=38*CM, pitch=STRIP_H+GAP;
+ const stripX=vertical?.5*CM:(W-52*CM)/2, top=vertical?(H-52*CM)/2:.5*CM, contentTop=top+END, contentH=38*CM, pitch=STRIP_H+GAP;
  let occupied=0;
  rows.slice(0,6).forEach((r,i)=>{
-  const im=images[r.fileIndex]?.img;if(!im)return; const x=stripX+i*pitch;
-  if(x+STRIP_H>W)return;
+  const im=images[r.fileIndex]?.img;if(!im)return; const x=vertical?stripX+i*pitch:stripX+END;
+  const y=vertical?top:stripX+i*pitch;
+  if((vertical&&x+STRIP_H>W)||(!vertical&&y+STRIP_H>H))return;
   const mode=document.getElementById('fitMode').value, scale=mode==='cover'?Math.max(STRIP_H/im.width,contentH/im.height):Math.min(STRIP_H/im.width,contentH/im.height);
   const dw=im.width*scale,dh=im.height*scale;
-  ctx.save();ctx.beginPath();ctx.rect(x,contentTop,STRIP_H,contentH);ctx.clip();ctx.translate(x+STRIP_H/2,contentTop+contentH/2);
-  if(r.imageOrientation==='izquierda')ctx.scale(-1,1);ctx.drawImage(im,-dw/2,-dh/2,dw,dh);ctx.restore();occupied++;
+  ctx.save();ctx.beginPath();ctx.rect(vertical?x:stripX+END,vertical?contentTop:y,vertical?STRIP_H:contentH,vertical?contentH:STRIP_H);ctx.clip();ctx.translate(vertical?x+STRIP_H/2:stripX+END+contentH/2,vertical?contentTop+contentH/2:y+STRIP_H/2);
+  if(r.imageOrientation==='izquierda')ctx.scale(-1,1);if(vertical)ctx.drawImage(im,-dw/2,-dh/2,dw,dh);else {ctx.rotate(-Math.PI/2);ctx.drawImage(im,-dh/2,-dw/2,dh,dw);}ctx.restore();occupied++;
  });
  ctx.save();ctx.strokeStyle='#777';ctx.lineWidth=Math.max(2,CM*.012);ctx.setLineDash([CM*.08,CM*.07]);
- for(let i=0;i<6;i++){const x=stripX+i*pitch;if(x+STRIP_H<=W)ctx.strokeRect(x+1,top+1,STRIP_H-2,52*CM-2);}ctx.restore();
+ for(let i=0;i<6;i++){const x=vertical?stripX+i*pitch:stripX+END;const y=vertical?top:stripX+i*pitch;if(vertical?x+STRIP_H<=W:y+STRIP_H<=H)ctx.strokeRect(x+1,y+1,vertical?STRIP_H-2:38*CM-2,vertical?52*CM-2:STRIP_H-2);}ctx.restore();
  document.getElementById('count').textContent=occupied+' de 6 cintas ocupadas';
 }
 function draw(){const c=preview.getContext('2d');drawTo(c);}
