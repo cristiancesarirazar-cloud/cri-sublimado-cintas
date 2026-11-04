@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Bitmap;
 import android.util.Base64;
 import android.content.Context;
+import java.util.ArrayList;
 import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends Activity {
@@ -39,9 +40,25 @@ public class MainActivity extends Activity {
             @Override public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
                 if (uploadCallback != null) uploadCallback.onReceiveValue(null);
                 uploadCallback = callback;
-                Intent intent = params.createIntent();
-                try { startActivityForResult(intent, FILE_CHOOSER); } catch (Exception e) { uploadCallback = null; return false; }
-                return true;
+                try {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    String[] accepted = params.getAcceptTypes();
+                    String type = "image/*";
+                    if (accepted != null) {
+                        for (String a : accepted) {
+                            if (a != null && a.startsWith("image/")) { type = a; break; }
+                        }
+                    }
+                    intent.setType(type);
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, params.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE);
+                    startActivityForResult(Intent.createChooser(intent, "Elegí una o varias imágenes"), FILE_CHOOSER);
+                    return true;
+                } catch (Exception e) {
+                    uploadCallback.onReceiveValue(null);
+                    uploadCallback = null;
+                    return false;
+                }
             }
         });
         webView.loadUrl("file:///android_asset/index.html");
@@ -50,7 +67,16 @@ public class MainActivity extends Activity {
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FILE_CHOOSER && uploadCallback != null) {
-            Uri[] results = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+            Uri[] results = null;
+            if (resultCode == RESULT_OK && data != null) {
+                if (data.getClipData() != null) {
+                    int count = data.getClipData().getItemCount();
+                    results = new Uri[count];
+                    for (int i = 0; i < count; i++) results[i] = data.getClipData().getItemAt(i).getUri();
+                } else if (data.getData() != null) {
+                    results = new Uri[] { data.getData() };
+                }
+            }
             uploadCallback.onReceiveValue(results);
             uploadCallback = null;
         }
