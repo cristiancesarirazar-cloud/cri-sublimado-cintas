@@ -33,12 +33,12 @@ let pageWcm=21,pageHcm=53, vertical=true, W=Math.round(pageWcm*CM), H=Math.round
 const filesEl=document.getElementById('files'), rowsEl=document.getElementById('rows'), preview=document.getElementById('preview');
 preview.width=W;preview.height=H;
 let images=[], rows=[];
-function makeRow(fileIndex=0,copies=1,imageOrientation='derecha'){return {fileIndex,copies,imageOrientation};}
+function makeRow(fileIndex=0,copies=1,imageOrientation='90'){return {fileIndex,copies,imageOrientation};}
 function addRow(r=makeRow()){if(rows.length>=6)return;rows.push(r);renderRows();draw();}
 function renderRows(){rowsEl.innerHTML='';if(!rows.length){rowsEl.innerHTML='<div class="empty">Cargá imágenes para comenzar.</div>';return;}
  rows.forEach((r,i)=>{const d=document.createElement('div');d.className='row';
  const opts=images.map((im,j)=>`<option value="${j}" ${j===r.fileIndex?'selected':''}>${escapeHtml(im.name)}</option>`).join('');
- d.innerHTML=`<div class="filepick"><label>Cinta ${i+1} · imagen</label><select class="pick">${opts}</select></div><div><label>Repeticiones</label><input class="copies" type="number" min="1" max="6" value="${r.copies}"></div><div><label>Orientación imagen</label><select class="imgOrientation"><option value="derecha" ${r.imageOrientation==='derecha'?'selected':''}>Derecha</option><option value="izquierda" ${r.imageOrientation==='izquierda'?'selected':''}>Izquierda</option></select></div><div><label>Posición</label><div class="small">${i+1} / 6</div></div><button class="light remove" title="Eliminar">✕</button>`;
+ d.innerHTML=`<div class="filepick"><label>Cinta ${i+1} · imagen</label><select class="pick">${opts}</select></div><div><label>Repeticiones</label><input class="copies" type="number" min="1" max="6" value="${r.copies}"></div><div><label>Girar imagen</label><select class="imgOrientation"><option value="90" ${r.imageOrientation==='90'?'selected':''}>Girar 90°</option><option value="0" ${r.imageOrientation==='0'?'selected':''}>Sin girar</option><option value="-90" ${r.imageOrientation==='-90'?'selected':''}>Girar -90°</option></select></div><div><label>Posición</label><div class="small">${i+1} / 6</div></div><button class="light remove" title="Eliminar">✕</button>`;
  d.querySelector('.pick').onchange=e=>{r.fileIndex=+e.target.value;draw()};d.querySelector('.copies').onchange=e=>{r.copies=Math.max(1,Math.min(6,+e.target.value||1));e.target.value=r.copies;draw()};d.querySelector('.imgOrientation').onchange=e=>{r.imageOrientation=e.target.value;draw()};d.querySelector('.remove').onclick=()=>{rows.splice(i,1);renderRows();draw()};rowsEl.appendChild(d);
  });}
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -56,14 +56,14 @@ filesEl.onchange=async e=>{
    added++;
   }catch(err){failed++;}
  }
- if(images.length&&!rows.length)addRow(makeRow(0,1,'derecha'));
+ if(images.length&&!rows.length)addRow(makeRow(0,1,'90'));
  renderRows();draw();
  if(added===0)alert('No se pudo leer esa imagen. Probá con una foto JPG o PNG de la galería.');
  else if(failed>0)alert('Se cargaron '+added+' imagen(es). No se pudieron leer '+failed+' archivo(s).');
  e.target.value='';
 };
-document.getElementById('addRow').onclick=()=>addRow(makeRow(Math.max(0,images.length-1),1,'derecha'));
-document.getElementById('fillRows').onclick=()=>{if(!images.length){alert('Primero cargá al menos una imagen.');return;}while(rows.length<6)rows.push(makeRow(rows.length%images.length,1,'derecha'));renderRows();draw();};
+document.getElementById('addRow').onclick=()=>addRow(makeRow(Math.max(0,images.length-1),1,'90'));
+document.getElementById('fillRows').onclick=()=>{if(!images.length){alert('Primero cargá al menos una imagen.');return;}while(rows.length<6)rows.push(makeRow(rows.length%images.length,1,'90'));renderRows();draw();};
 document.getElementById('refresh').onclick=draw;
 document.getElementById('fitMode').onchange=draw;
 ['sheetType','orientation','customW','customH'].forEach(id=>document.getElementById(id).addEventListener('change',updateSheet));
@@ -80,19 +80,21 @@ function updateSheet(){
 }
 function drawTo(ctx){
  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
- const stripX=vertical?.5*CM:(W-52*CM)/2, top=vertical?(H-52*CM)/2:.5*CM, contentTop=top, contentH=52*CM, pitch=STRIP_H+GAP;
+ const stripX=vertical?.5*CM:(W-52*CM)/2, top=vertical?(H-52*CM)/2:.5*CM, pitch=STRIP_H+GAP;
  let occupied=0;
  rows.slice(0,6).forEach((r,i)=>{
-  const im=images[r.fileIndex]?.img;if(!im)return; const x=vertical?stripX+i*pitch:stripX;
-  const y=vertical?top:stripX+i*pitch;
-  if((vertical&&x+STRIP_H>W)||(!vertical&&y+STRIP_H>H))return;
-  const mode=document.getElementById('fitMode').value, scale=mode==='cover'?Math.max(STRIP_H/im.width,contentH/im.height):Math.min(STRIP_H/im.width,contentH/im.height);
+  const im=images[r.fileIndex]?.img;if(!im)return;
+  const x=vertical?stripX+i*pitch:stripX, y=vertical?top:top+i*pitch;
+  const tw=vertical?STRIP_H:52*CM, th=vertical?52*CM:STRIP_H;
+  if(x+tw>W||y+th>H)return;
+  const angle=(+r.imageOrientation||0)*Math.PI/180, rotated=Math.abs(angle)===Math.PI/2;
+  const iw=rotated?im.height:im.width, ih=rotated?im.width:im.height;
+  const mode=document.getElementById('fitMode').value, scale=mode==='cover'?Math.max(tw/iw,th/ih):Math.min(tw/iw,th/ih);
   const dw=im.width*scale,dh=im.height*scale;
-  ctx.save();ctx.beginPath();ctx.rect(vertical?x:stripX+END,vertical?contentTop:y,vertical?STRIP_H:contentH,vertical?contentH:STRIP_H);ctx.clip();ctx.translate(vertical?x+STRIP_H/2:stripX+END+contentH/2,vertical?contentTop+contentH/2:y+STRIP_H/2);
-  if(r.imageOrientation==='izquierda')ctx.scale(-1,1);if(vertical)ctx.drawImage(im,-dw/2,-dh/2,dw,dh);else {ctx.rotate(-Math.PI/2);ctx.drawImage(im,-dh/2,-dw/2,dh,dw);}ctx.restore();occupied++;
+  ctx.save();ctx.beginPath();ctx.rect(x,y,tw,th);ctx.clip();ctx.translate(x+tw/2,y+th/2);ctx.rotate(angle);ctx.drawImage(im,-dw/2,-dh/2,dw,dh);ctx.restore();occupied++;
  });
  ctx.save();ctx.strokeStyle='#777';ctx.lineWidth=Math.max(2,CM*.012);ctx.setLineDash([CM*.08,CM*.07]);
- for(let i=0;i<6;i++){const x=vertical?stripX+i*pitch:stripX+END;const y=vertical?top:stripX+i*pitch;if(vertical?x+STRIP_H<=W:y+STRIP_H<=H)ctx.strokeRect(x+1,y+1,vertical?STRIP_H-2:38*CM-2,vertical?52*CM-2:STRIP_H-2);}ctx.restore();
+ for(let i=0;i<6;i++){const x=vertical?stripX+i*pitch:stripX,y=vertical?top:top+i*pitch,tw=vertical?STRIP_H:52*CM,th=vertical?52*CM:STRIP_H;if(x+tw<=W&&y+th<=H)ctx.strokeRect(x+1,y+1,tw-2,th-2);}ctx.restore();
  document.getElementById('count').textContent=occupied+' de 6 cintas ocupadas';
 }
 function draw(){const c=preview.getContext('2d');drawTo(c);}
