@@ -12,6 +12,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
+import android.graphics.BitmapFactory;
 import android.graphics.Bitmap;
 import android.util.Base64;
 import android.content.Context;
