@@ -74,7 +74,7 @@ function updateSheet(){
  let a=custom?Math.max(5,+document.getElementById('customW').value||21):21;
  let b=custom?Math.max(5,+document.getElementById('customH').value||53):53;
  if(!custom){pageWcm=vertical?21:53;pageHcm=vertical?53:21;} else {pageWcm=vertical?Math.min(a,b):Math.max(a,b);pageHcm=vertical?Math.max(a,b):Math.min(a,b);}
- W=Math.round(pageWcm*CM);H=Math.round(pageHcm*CM);preview.width=W;preview.height=H;
+ W=Math.round(pageWcm*CM);H=Math.round(pageHcm*CM);const previewScale=Math.min(1,900/W,2200/H);preview.width=Math.max(1,Math.round(W*previewScale));preview.height=Math.max(1,Math.round(H*previewScale));
  document.querySelector('.preview').style.aspectRatio=pageWcm+'/'+pageHcm;
  document.getElementById('sizeLabel').textContent='Tamaño final: '+pageWcm+' × '+pageHcm+' cm · 300 DPI'; draw();
 }
@@ -97,7 +97,7 @@ function drawTo(ctx){
  for(let i=0;i<6;i++){const x=vertical?stripX+i*pitch:stripX,y=vertical?top:top+i*pitch,tw=vertical?STRIP_H:52*CM,th=vertical?52*CM:STRIP_H;if(x+tw<=W&&y+th<=H)ctx.strokeRect(x+1,y+1,tw-2,th-2);}ctx.restore();
  document.getElementById('count').textContent=occupied+' de 6 cintas ocupadas';
 }
-function draw(){const c=preview.getContext('2d');drawTo(c);}
+function draw(){const c=preview.getContext('2d');c.setTransform(preview.width/W,0,0,preview.height/H,0,0);drawTo(c);}
 document.getElementById('png').onclick=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;drawTo(c.getContext('2d'));c.toBlob(blob=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Cri_Sublimado_Cintas_21x53cm_300dpi.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);},'image/png');};
 document.getElementById('pdf').onclick=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;drawTo(c.getContext('2d'));const data=c.toDataURL('image/png');if(window.AndroidPrint&&window.AndroidPrint.printPng){window.AndroidPrint.printPng(data.split(',')[1],pageWcm,pageHcm);return;}const win=window.open('','_blank');if(!win){alert('El navegador bloqueó la ventana. Permití ventanas emergentes para guardar el PDF.');return;}win.document.write(`<!doctype html><html><head><title>Cri Sublimado - Cintas</title><style>@page{size:${pageWcm}cm ${pageHcm}cm;margin:0}html,body{margin:0;width:${pageWcm}cm;height:${pageHcm}cm}img{display:block;width:${pageWcm}cm;height:${pageHcm}cm}</style></head><body><img src="${data}"><script>window.onload=()=>setTimeout(()=>window.print(),300);<\/script></body></html>`);win.document.close();};
 updateSheet();
