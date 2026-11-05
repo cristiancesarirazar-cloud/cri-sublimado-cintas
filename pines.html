@@ -1,0 +1,82 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Crisublimado - Preparador de Pines v7.3</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f5f8;font:15px Arial;color:#222}header{background:white;padding:18px;border-bottom:4px solid #e6007e}h1{margin:0;color:#e6007e}main{max-width:1200px;margin:18px auto;padding:0 12px;display:grid;grid-template-columns:330px 1fr;gap:16px}.panel{background:#fff;border:1px solid #ddd;border-radius:12px;padding:15px}h2{font-size:18px;margin:0 0 12px}label{display:block;font-weight:bold;margin:12px 0 5px}input[type=file],input[type=number],input[type=range]{width:100%}input[type=number]{padding:8px}button{border:0;border-radius:7px;padding:10px;background:#e6007e;color:#fff;font-weight:bold;cursor:pointer;margin:4px 2px 0 0}.alt{background:#444}.light{background:#eee;color:#222;border:1px solid #ccc}.small{font-size:12px;color:#555;line-height:1.45}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}#status{margin-top:12px;padding:9px;background:#fff1f8;border-radius:7px;font-size:13px}#gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.item{border:1px solid #ddd;border-radius:7px;padding:8px;overflow-wrap:anywhere;font-size:12px}.item img{width:52px;height:52px;border-radius:50%;object-fit:cover;float:left;margin-right:8px}.item button{font-size:11px;padding:6px}.head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}#sheetWrap{overflow:auto;background:#e9e9ee;padding:12px;margin-top:12px}#sheet{width:21cm;height:29.7cm;background:white;position:relative;margin:auto;overflow:hidden;flex:none}#grid{position:absolute;left:.5cm;top:2cm;width:20cm;height:25.7cm;display:grid;grid-template-columns:repeat(4,4.8cm);grid-template-rows:repeat(5,4.8cm);column-gap:calc((20cm - 19.2cm)/3);row-gap:calc((25.7cm - 24cm)/4)}.pin{width:4.8cm;height:4.8cm;border-radius:50%;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}.pin img{width:100%;height:100%;object-fit:cover}.empty{border:1px dashed #ddd}.empty:after{content:attr(data-n);color:#ccc;font-size:12px}@media(max-width:850px){main{grid-template-columns:1fr}}@media print{@page{size:A4 portrait;margin:0}body{background:white}header,.controls,.head,.note{display:none!important}main{display:block;margin:0;padding:0;max-width:none}.panel{border:0;padding:0;box-shadow:none}#sheetWrap{padding:0;margin:0;overflow:visible;background:white}#sheet{margin:0;box-shadow:none}}
+</style></head><body><header><h1>Crisublimado · Preparador de Pines v7.3</h1><p>Hoja A4 · 20 pines circulares · 4,8 cm · salida preparada a 300 PPI</p></header>
+<main><div style="grid-column:1/-1"><section class="panel" style="margin-bottom:14px;border:2px solid #e6007e">
+<h2>Sincronización celular ↔ computadora</h2>
+<p class="small">Conectá ambos dispositivos con el mismo código privado. Las fotos que subas desde el celular aparecerán automáticamente en la hoja de pines de la computadora.</p>
+<label for="syncCode">Código compartido (elegí uno y usá el mismo en ambos dispositivos)</label>
+<input id="syncCode" type="password" autocomplete="off" placeholder="Creá un código privado" style="width:100%;padding:10px">
+<div class="row"><button id="syncConnect">Conectar este dispositivo</button><button id="syncDisconnect" class="light">Desconectar</button></div>
+<label for="syncFile">Elegir foto para enviar al otro dispositivo</label>
+<input id="syncFile" type="file" accept="image/*" capture="environment" style="width:100%">
+<button id="syncUpload">Enviar foto y mostrar en los dispositivos</button>
+<div id="syncStatus" class="small" role="status" style="margin-top:8px">Todavía no conectado.</div>
+</section></div><section class="panel controls"><h2>1. Cargar imágenes</h2><label>Elegí una o varias fotos</label><input id="files" type="file" accept="image/*" multiple><label>Copias de cada foto nueva</label><input id="qty" type="number" min="1" max="20" value="1"><p class="small">Cada foto se coloca en los primeros lugares vacíos. Si elegís varias fotos juntas, se aplica esta cantidad a cada una.</p>
+<label>Completar bordes para que quede redondo</label><select id="fitMode"><option value="background" selected>1. Conservar toda la foto sobre fondo blanco (sin desenfoque)</option><option value="contain">Conservar toda la imagen (sin cortes)</option><option value="fill">Llenar el círculo (centrado)</option><option value="collage">Collage: protagonista al centro y ajustar el encuadre</option></select><p class="small">Primero probá conservar el original completo. Si no llena bien el círculo, podés pedir una versión completada con IA: inventar la continuación del fondo con el mismo estilo, agrandar y centrar la imagen principal, sin cortar caras ni textos, y dejar blanco fuera del círculo. Este archivo prepara el encuadre, pero no genera esa continuación con IA por sí solo.</p><div class="row"><div><label>Luz</label><input id="brightness" type="range" min="80" max="135" value="108"><div class="small"><span id="bval">108</span>%</div></div><div><label>Contraste</label><input id="contrast" type="range" min="80" max="140" value="108"><div class="small"><span id="cval">108</span>%</div></div></div><button id="enhance" class="alt">Aplicar mejora de luz y calidad</button><button id="aiPrompt" class="alt">Copiar pedido para completar con IA</button><button id="reset" class="light">Restablecer ajustes</button><p class="small">Si el original no entra bien, usá el botón para copiar las instrucciones y pegarlas en ChatGPT junto con la foto. La IA debe generar el fondo faltante; después cargá el resultado aquí para imprimirlo.</p><div id="status">Listo para cargar imágenes.</div>
+<h2 style="margin-top:20px">2. Diseños cargados</h2><div id="gallery"></div><div style="margin-top:14px"><button id="clear" class="light">Vaciar hoja</button><button id="print">Imprimir hoja A4</button><button id="pdf" class="alt">Guardar hoja en PDF</button></div><p class="small note">Antes de usar papel de sublimación, probá en papel común. Elegí A4, escala 100 % o “Tamaño real” y desactivá “Ajustar a página”.</p></section>
+<section class="panel"><div class="head"><div><h2 style="margin-bottom:4px">Vista previa de la hoja</h2><div class="small">4 columnas × 5 filas · márgenes laterales 0,5 cm · superior e inferior 2 cm</div></div><b id="count">0 / 20 pines</b></div><div id="sheetWrap"><div id="sheet"><div id="grid"></div></div></div><p class="small note">Cada pin se prepara a 567 × 567 píxeles (aprox. 300 PPI a 4,8 cm). La mejora de luz/contraste no recupera detalles ausentes en la foto original. Exterior blanco.</p></section></main>
+<script>
+const N=20,S=567;let pins=Array(N).fill(null);const grid=document.getElementById('grid'),gallery=document.getElementById('gallery'),status=document.getElementById('status');
+function say(t){status.textContent=t}function updateVals(){bval.textContent=brightness.value;cval.textContent=contrast.value}
+function init(){grid.innerHTML='';for(let i=0;i<N;i++){let d=document.createElement('div');d.className='pin empty';d.dataset.n=i+1;grid.appendChild(d)}}
+function imgLoad(file){return new Promise((res,rej)=>{let u=URL.createObjectURL(file),im=new Image();im.onload=()=>res({im,u});im.onerror=rej;im.src=u})}
+function enhance(im,b,c){
+ let cv=document.createElement('canvas');cv.width=cv.height=S;let x=cv.getContext('2d',{willReadFrequently:true});
+ x.fillStyle='#fff';x.fillRect(0,0,S,S);
+ let mode=document.getElementById('fitMode').value;
+ let cover=Math.max(S/im.width,S/im.height),cw=im.width*cover,ch=im.height*cover;
+ let sc=(mode==='fill'||mode==='collage')?cover:Math.min(S/im.width,S/im.height),w=im.width*sc,h=im.height*sc;
+ x.save();x.beginPath();x.arc(S/2,S/2,S/2,0,Math.PI*2);x.clip();
+ if(mode==='background'){
+   // Sin fondos borrosos ni duplicados: conservar la foto completa centrada y dejar blanco lo que sobre.
+   let fg=Math.min(S/im.width,S/im.height),fw=im.width*fg,fh=im.height*fg;
+   x.fillStyle='#fff';x.fillRect(0,0,S,S);
+   x.drawImage(im,(S-fw)/2,(S-fh)/2,fw,fh);
+ } else {
+   // En collage se prioriza la zona central y se desplaza levemente el encuadre hacia abajo; el exterior se mantiene blanco.
+   let dx=(S-w)/2,dy=(S-h)/2; if(mode==='collage'){ if(w>S) dx=(S-w)/2; if(h>S) dy=(S-h)*0.40; }
+   x.drawImage(im,dx,dy,w,h);
+ }
+ x.restore();
+ let d=x.getImageData(0,0,S,S),p=d.data,B=Number(b)/100,C=Number(c)/100;
+ for(let i=0;i<p.length;i+=4){let a=p[i+3];if(a===0)continue;for(let k=0;k<3;k++)p[i+k]=Math.max(0,Math.min(255,((p[i+k]-128)*C+128)*B))}
+ x.putImageData(d,0,0);
+ // Enforce pure white outside the circular pin; retain circular clipping on print.
+ let out=x.getImageData(0,0,S,S),q=out.data;
+ for(let yy=0;yy<S;yy++)for(let xx=0;xx<S;xx++){let dx=xx+0.5-S/2,dy=yy+0.5-S/2;if(dx*dx+dy*dy>(S/2)*(S/2)){let z=(yy*S+xx)*4;q[z]=q[z+1]=q[z+2]=255;q[z+3]=255}}
+ x.putImageData(out,0,0);return cv.toDataURL('image/png')
+}
+async function addFile(f,q){let free=pins.map((p,i)=>p? -1:i).filter(i=>i>=0);if(!free.length){say('La hoja está llena. Quitá copias antes de agregar más.');return}let n=Math.min(q,free.length),o=await imgLoad(f),data=enhance(o.im,brightness.value,contrast.value);URL.revokeObjectURL(o.u);for(let j=0;j<n;j++)pins[free[j]]={name:f.name,data,file:f};say(`Se agregaron ${n} copia(s) de ${f.name}.`);render();if(n<q)say(`Se agregaron ${n} copias de ${f.name}; no entraban todas las solicitadas.`)}
+function render(){[...grid.children].forEach((el,i)=>{el.className='pin'+(pins[i]?'':' empty');el.innerHTML='';el.dataset.n=i+1;if(pins[i]){let im=new Image();im.src=pins[i].data;im.alt=pins[i].name;el.appendChild(im)}});gallery.innerHTML='';let groups=new Map();pins.forEach((p,i)=>{if(p){let k=p.name+'|'+p.data;if(!groups.has(k))groups.set(k,{p,ids:[]});groups.get(k).ids.push(i)}});for(let {p,ids} of groups.values()){let d=document.createElement('div');d.className='item';let im=new Image();im.src=p.data;let t=document.createElement('b');t.textContent=p.name;let m=document.createElement('p');m.textContent=ids.length+' copia(s) · lugares '+ids.map(i=>i+1).join(', ');let one=document.createElement('button');one.className='light';one.textContent='Quitar una';one.onclick=()=>{pins[ids[ids.length-1]]=null;render();say('Se quitó una copia.')};let all=document.createElement('button');all.className='light';all.textContent='Quitar todas';all.onclick=()=>{pins=pins.map(x=>x&&x.data===p.data?null:x);render();say('Se quitaron las copias.')};d.append(im,t,m,one,all);gallery.appendChild(d)}count.textContent=pins.filter(Boolean).length+' / 20 pines'}
+files.onchange=async e=>{let fs=[...e.target.files],q=Math.max(1,Math.min(20,parseInt(qty.value||'1')));for(let f of fs){if(f.type.startsWith('image/'))await addFile(f,q);if(!pins.some(x=>!x))break}files.value=''};
+brightness.oninput=contrast.oninput=updateVals;fitMode.onchange=()=>say('Modo de encuadre cambiado. Pulsá “Aplicar mejora” para actualizar las imágenes.');
+document.getElementById('aiPrompt').onclick=async()=>{const prompt='Prepará esta imagen para un pin circular de 4,8 x 4,8 cm a 300 DPI. Conservá el diseño original y su contenido importante. Agrandá y centrà la imagen principal sin cortar caras ni textos. Si no alcanza a llenar el círculo, inventá con IA la continuación del fondo y los elementos decorativos con el mismo estilo, colores y textura de la imagen original, integrándolo naturalmente; no repitas partes ni caras. El círculo debe quedar completamente lleno y todo lo exterior al círculo debe ser blanco puro para ahorrar tinta. No cambies el texto ni deformes el sujeto principal.';try{await navigator.clipboard.writeText(prompt);say('Pedido para IA copiado. Pegalo en ChatGPT junto con la foto original.')}catch(e){window.prompt('Copiá este pedido y pegalo en ChatGPT junto con la foto original:',prompt)}};
+enhance.onclick=async()=>{for(let p of pins){if(p){let o=await imgLoad(p.file);p.data=enhance(o.im,brightness.value,contrast.value);URL.revokeObjectURL(o.u)}}render();say('Mejora aplicada. Ajustá luz y contraste a gusto y volvé a pulsar para aplicarlos.')};
+reset.onclick=()=>{brightness.value=contrast.value=100;updateVals();say('Ajustes restablecidos. Pulsá “Aplicar mejora” para aplicarlos a las fotos.')};
+clear.onclick=()=>{if(confirm('¿Vaciar todos los lugares de la hoja?')){pins=Array(N).fill(null);render();say('Hoja vacía.')}};
+print.onclick=()=>window.print();document.getElementById('pdf').onclick=()=>{say('En la ventana de impresión, elegí “Guardar como PDF” como destino y después tocá Guardar.');window.print()};init();render();updateVals();
+
+// Sincronización entre dispositivos mediante Netlify Functions + Netlify Blobs.
+(()=>{
+ const codeEl=document.getElementById('syncCode'), connectBtn=document.getElementById('syncConnect'), disconnectBtn=document.getElementById('syncDisconnect'), fileEl=document.getElementById('syncFile'), uploadBtn=document.getElementById('syncUpload'), syncStatus=document.getElementById('syncStatus');
+ let roomCode='', timer=null, busy=false; const seen=new Set();
+ const saySync=t=>{syncStatus.textContent=t};
+ const headers=()=>({'X-Room-Code':roomCode});
+ async function connect(){
+  const c=codeEl.value.trim(); if(c.length<8){saySync('El código debe tener al menos 8 caracteres. Usá uno difícil de adivinar y el mismo en ambos equipos.');return;}
+  roomCode=c; localStorage.setItem('criPinesRoomCode',c); clearInterval(timer); saySync('Conectando…');
+  try{const r=await fetch('/.netlify/functions/sync?action=list',{headers:headers()}); if(!r.ok) throw new Error(await r.text()); const data=await r.json(); saySync('Conectado. Revisando fotos nuevas automáticamente cada 3 segundos.'); await receive(data.items||[]); timer=setInterval(poll,3000);}
+  catch(e){saySync('No se pudo conectar. La sincronización necesita que esté publicada la versión 7.0 completa en Netlify. Detalle: '+e.message);roomCode='';}
+ }
+ async function poll(){if(!roomCode||busy)return;busy=true;try{const r=await fetch('/.netlify/functions/sync?action=list',{headers:headers()});if(!r.ok)throw new Error('Error al consultar la nube ('+r.status+').');const d=await r.json();await receive(d.items||[]);}catch(e){saySync('Problema de conexión: '+e.message);}finally{busy=false;}}
+ async function receive(items){
+  for(const item of items){if(seen.has(item.key))continue;seen.add(item.key);try{const r=await fetch('/.netlify/functions/sync?action=download&key='+encodeURIComponent(item.key),{headers:headers()});if(!r.ok)throw new Error('No se pudo descargar '+item.name);const blob=await r.blob();const f=new File([blob],item.name||'foto-sincronizada.jpg',{type:blob.type||'image/jpeg'});await addFile(f,1);saySync('Foto recibida: '+f.name+'. Ya aparece en la hoja de pines.');}catch(e){seen.delete(item.key);saySync('Error al recibir la foto: '+e.message);}}
+ }
+ connectBtn.addEventListener('click',connect);
+ disconnectBtn.addEventListener('click',()=>{clearInterval(timer);timer=null;roomCode='';localStorage.removeItem('criPinesRoomCode');saySync('Dispositivo desconectado.');});
+ uploadBtn.addEventListener('click',async()=>{if(!roomCode){saySync('Primero conectá este dispositivo con el código compartido.');return;}const f=fileEl.files&&fileEl.files[0];if(!f){saySync('Elegí una foto primero.');return;}if(!f.type.startsWith('image/')){saySync('Solo se permiten imágenes.');return;}if(f.size>15*1024*1024){saySync('La foto supera el límite de 15 MB.');return;}uploadBtn.disabled=true;saySync('Enviando foto a la nube de Netlify…');try{const form=new FormData();form.append('file',f);const r=await fetch('/.netlify/functions/sync?action=upload',{method:'POST',headers:headers(),body:form});if(!r.ok)throw new Error(await r.text());const d=await r.json();if(d.key)seen.add(d.key);saySync('¡Foto enviada! Se mostrará en el otro dispositivo en unos segundos.');fileEl.value='';await poll();}catch(e){saySync('No se pudo enviar: '+e.message);}finally{uploadBtn.disabled=false;}});
+ const saved=localStorage.getItem('criPinesRoomCode');if(saved){codeEl.value=saved;}
+})();
+
+</script></body></html>
