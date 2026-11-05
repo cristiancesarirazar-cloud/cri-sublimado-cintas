@@ -31,6 +31,12 @@ jobs:
       - name: Instalar SDK de Android 35
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
+      - name: Preparar firma estable de la aplicación
+        run: |
+          mkdir -p "$HOME/.android"
+          base64 --decode .github/keys/cri-debug.keystore.b64 > "$HOME/.android/debug.keystore"
+          chmod 600 "$HOME/.android/debug.keystore"
+
       - name: Construir APK
         run: gradle assembleDebug
 
