@@ -1,0 +1,18 @@
+{
+  "name": "Cri Sublimado - Armador de Cintas",
+  "short_name": "Cintas Cri",
+  "description": "Armador de cintas para sublimación",
+  "start_url": "./cintas.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#26005d",
+  "theme_color": "#7300c9",
+  "icons": [
+    {
+      "src": "./icon-cri-cintas.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
