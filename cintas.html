@@ -22,7 +22,7 @@
 </div></section>
 <section class="card no-print"><h2>2. Armado de la hoja</h2><div class="notice" id="layoutNotice">Hoja fija de <b>21 × 53 cm</b>. Elegí cintas de 2,5 cm o 3 cm de ancho. El programa acomoda automáticamente la mayor cantidad posible, con 1 cm de separación. No agrega márgenes al diseño: la imagen se imprime completa a lo largo de los 52 cm.</div>
 <div id="rows"><div class="empty">Cargá imágenes para comenzar.</div></div>
-<div class="btns"><button class="light" id="addRow">＋ Agregar cinta</button><button class="secondary" id="fillRows">Completar hasta 6</button><button id="refresh">Actualizar vista previa</button></div>
+<div class="btns"><button class="light" id="addRow">＋ Agregar cinta</button><button class="secondary" id="fillRows">Completar hoja</button><button id="refresh">Actualizar vista previa</button></div>
 <p class="small">Cada cinta mide 52 cm de largo. El margen, si corresponde, debe venir incluido en la imagen que cargás. Podés espejar el diseño antes de imprimir.</p></section>
 <section class="card"><h2>3. Vista previa de impresión</h2><div class="grid no-print"><div><div class="stat" id="count">0 de 6 cintas ocupadas</div><div class="small" id="sizeLabel">Tamaño final: 21 × 53 cm · 300 DPI</div></div><div class="btns" style="margin:0"><button id="png">Descargar PNG 300 DPI</button><button id="pdf">Imprimir / Guardar PDF</button></div></div><div class="previewbox"><div class="preview"><canvas id="preview"></canvas></div></div><p class="small no-print">Para el PDF, elegí “Guardar como PDF” y desactivá “Ajustar a página” si aparece. Imprimí al 100% / tamaño real.</p></section>
 </div>
@@ -62,7 +62,7 @@ function updateSheet(){
 }
 function drawTo(ctx){
  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
- const stripX=.5*CM, top=(H-52*CM)/2, contentTop=top, contentH=52*CM, pitch=STRIP_H+GAP;
+ const pitch=STRIP_H+GAP, stripX=(W-(maxRows*STRIP_H+(maxRows-1)*GAP))/2, top=(H-52*CM)/2, contentTop=top, contentH=52*CM;
  let occupied=0;
  rows.slice(0,maxRows).forEach((r,i)=>{
   const im=images[r.fileIndex]?.img;if(!im)return; const x=stripX+i*pitch;
